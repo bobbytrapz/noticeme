@@ -1,11 +1,51 @@
 # noticeme
 
-Provides python bindings for inotify utilizing coroutines.
-I wrote this back when I was curious about coroutines but I have been using it lately so I decided to share it.
+Provides python bindings for inotify and framework for building watchers using coroutines.
+
 Please note this only runs on Linux and a have no plans to support any other OS.
+
 There are many, many alternatives though.
 
-## Example
+noticeme includes the noticeme command for quickly setting up a file watcher.
+
+## Using noticeme declaratively
+
+If you just need a small file watcher you can try this out.
+
+```
+pip install --user noticeme # install
+nano noticeme.cfg # use noticeme/examples/noticeme.cfg for an example
+noticeme # start watching
+```
+
+To see a full list of events:
+
+```
+  noticeme events
+```
+
+## Quick look at configuration
+
+see noticeme/examples/noticeme.cfg for details
+
+```
+# noticeme.cfg
+[should]
+  clear_screen = yes
+
+[imports]
+  example = A .py file with a @noticeme.watcher decorator in it
+
+[my_watcher]
+  description = This is an example.
+  paths = . **
+  events = written
+  regex = ^docs
+  glob = *.txt
+  shell = echo "my_watcher: file was added"
+```
+
+## Using noticeme to build a file watcher programmatically
 
 ```
 import asyncio
@@ -53,40 +93,3 @@ python3 inotify_build.py
 
 [watchdog](https://github.com/gorakhargosh/watchdog)
 [pyinotify](https://github.com/seb-m/pyinotify)
-
-## noticeme command line utility
-
-If you need a lightweight watcher for a project you can try this.
-
-```
-pip install --user noticeme # install
-touch noticeme.cfg # use noticeme/examples/noticeme.cfg for an example
-noticeme # start watching
-```
-
-To see a full list of events:
-
-```
-  noticeme events
-```
-
-## an example config
-
-Configuration looks like this. see noticeme/examples/noticeme.cfg for details
-
-```
-# noticeme.cfg
-[should]
-  clear_screen = yes
-
-[imports]
-  example = A .py file with a @noticeme.watcher decorator in it
-
-[my_watcher]
-  description = This is an example.
-  paths = . **
-  events = written
-  re = ^docs
-  glob = *.txt
-  shell = echo "my_watcher: file was added"
-```
