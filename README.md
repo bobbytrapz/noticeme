@@ -1,6 +1,6 @@
 # noticeme
 
-Provides python bindings for inotify and framework for building watchers using coroutines.
+Provides python bindings for inotify and framework for building file watchers using coroutines.
 
 Please note this only runs on Linux and a have no plans to support any other OS.
 
