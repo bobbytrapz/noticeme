@@ -21,7 +21,7 @@
 # SOFTWARE.
 
 try:
-    from .build._inotify import ffi, lib
+    from _inotify import ffi, lib
 except ImportError as e:
     raise ImportError("{}\nMake sure you ran 'python3 inotify_build.py'."
                       .format(e, __name__))
