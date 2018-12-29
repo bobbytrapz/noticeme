@@ -82,4 +82,4 @@ int inotify_rm_watch(int fd, int wd);
 """)
 
 if __name__ == '__main__':
-    ffibuilder.compile(tmpdir=".", verbose=True)
+    ffibuilder.compile(tmpdir="build", verbose=True)
