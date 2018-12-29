@@ -1,4 +1,4 @@
-# noticeme v2018.12
+# noticeme
 
 Provides python bindings for inotify utilizing coroutines.
 I wrote this back when I was curious about coroutines but I have been using it lately so I decided to share it.
