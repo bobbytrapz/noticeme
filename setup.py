@@ -6,9 +6,9 @@ with open(path.join(cwd, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(name='noticeme',
-      description=("Provides a framework for building watchers."
-                   " Includes a watcher utility program"
-                   " that allows you to create watchers declaratively."),
+      description=("Provides a framework for building file watchers."
+                   " Includes a file watcher utility program"
+                   " that allows you to create file watchers declaratively."),
       long_description=long_description,
       long_description_content_type='text/markdown',
       url='https://github.com/bobbytrapz/noticeme',
