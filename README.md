@@ -21,10 +21,6 @@ if __name__ == '__main__':
   noticeme.run()
 ```
 
-Watch '/path/to/directory'. Anytime a file is created or modified we check if
-it has '.py' extension. If it does we run 'cmd' with the path of the file as
-the first argument.
-
 ## Requirements
 
 - Linux >= 2.6.13
@@ -34,46 +30,37 @@ the first argument.
 
 ## Install
 
-### Include directly
-
-- Copy noticeme.py and inotify_build.py to your project directory
-- Within your project directory run:
-
-```
-python3 inotify_build.py
-```
-
-- this creates a 'build' directory containing the result of ffibuilder.compile
-- You should now be able to use noticeme.
-- inotify_build.py will no longer be needed.
-
 ### pip
 
 ```
 pip install --user noticeme
 ```
 
-## Troubleshooting
+### Include directly
 
-- Error: ImportError: No module named '\_inotify'
-- Make sure you have a C compiler installed and run:
+- Copy noticeme.py and inotify_build.py to your project directory
+- Within noticeme's package directory run:
 
 ```
- python3 inotify_build.py
+python3 inotify_build.py
 ```
+
+- This creates a 'build' directory containing the result of ffibuilder.compile
+- You should now be able to use noticeme.
+- inotify_build.py will no longer be needed.
 
 ## Alternatives
 
 [watchdog](https://github.com/gorakhargosh/watchdog)
 [pyinotify](https://github.com/seb-m/pyinotify)
 
-## noticeme cli
+## noticeme command line utility
 
 If you need a lightweight watcher for a project you can try this.
 
 ```
 pip install --user noticeme # install
-touch noticeme.cfg # edit the config file
+touch noticeme.cfg # use noticeme/examples/noticeme.cfg for an example
 noticeme # start watching
 ```
 
@@ -83,11 +70,14 @@ To see a full list of events:
   noticeme events
 ```
 
+## an example config
+
+Configuration looks like this. see noticeme/examples/noticeme.cfg for details
+
 ```
 # noticeme.cfg
 [should]
-  clear_screen = no
-  clear_after = 0
+  clear_screen = yes
 
 [imports]
   example = A .py file with a @noticeme.watcher decorator in it
@@ -96,8 +86,7 @@ To see a full list of events:
   description = This is an example.
   paths = . **
   events = written
-  # match any path that starts with docs
   re = ^docs
   glob = *.txt
-  shell = echo "test_written: file was added"
+  shell = echo "my_watcher: file was added"
 ```
