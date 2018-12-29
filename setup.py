@@ -15,8 +15,13 @@ setup(name='noticeme',
       author='Bobby',
       author_email='bobbytrapz@protonmail.com',
       license='MIT',
-      version='2019.01',
+      version='2',
       packages=find_packages(),
+      entry_points={
+          'console_scripts': [
+              'noticeme = noticeme.__main__:main',
+          ]
+      },
       python_requires='>=3.5',
       setup_requires=["cffi>=1.0.0"],
       install_requires=["cffi>=1.0.0"],

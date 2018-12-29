@@ -76,25 +76,53 @@ def show_events():
     return 0
 
 
-if len(sys.argv) > 1:
-    if sys.argv[1] == 'events':
-        show_events()
-        sys.exit(0)
-
-
-# read configuration
-config_path = 'noticeme.cfg'
-config_parser = ConfigParser()
-config_parser.read_dict(defaults)
-try:
-    config_parser.read(config_path)
-except ParsingError as e:
-    die(e)
-except FileNotFoundError:
-    die('You need a noticeme.cfg first.')
-
-
+config_parser = None
+should = None
+imports = None
 last_proc_at = datetime.min
+
+
+def read_config():
+    global config_parser, should, imports
+    # read configuration
+    config_path = 'noticeme.cfg'
+    config_parser = ConfigParser()
+    config_parser.read_dict(defaults)
+    try:
+        config_parser.read(config_path)
+    except ParsingError as e:
+        die(e)
+    except FileNotFoundError:
+        die('You need a noticeme.cfg first.')
+
+    # parse configuration
+    should = config_parser['should']
+    try:
+        int(should['clear_after'])
+    except ValueError:
+        die("'clear_after' should be an integer.")
+
+    if should['clear_screen'] == 'yes':
+        os.system('clear')
+
+    imports = config_parser['imports']
+
+    for name, desc in imports.items():
+        # import module
+        try:
+            mod = import_module(name)
+        except ImportError:
+            die("'import {}'".format(name))
+        print("import", name, '-', desc)
+
+    for name in config_parser.sections():
+        if name == 'should' or name == 'imports':
+            continue
+        section = config_parser[name]
+        try:
+            add_watcher_from_section(section)
+        except Exception as e:
+            die(e)
 
 
 async def create_shell_proc(name, command):
@@ -182,33 +210,17 @@ def add_watcher_from_section(section):
         name, command, regex_patterns, glob_patterns))
 
 
-# parse configuration
-should = config_parser['should']
-try:
-    int(should['clear_after'])
-except ValueError:
-    die("'clear_after' should be an integer.")
+def main():
+    if len(sys.argv) > 1:
+        if sys.argv[1] == 'events':
+            show_events()
+            sys.exit(0)
 
-if should['clear_screen'] == 'yes':
-    os.system('clear')
+    # configure
+    read_config()
+    # event loop
+    noticeme.run()
 
-imports = config_parser['imports']
 
-for name, desc in imports.items():
-    # import module
-    try:
-        mod = import_module(name)
-    except ImportError:
-        die("'import {}'".format(name))
-    print("import", name, '-', desc)
-
-for name in config_parser.sections():
-    if name == 'should' or name == 'imports':
-        continue
-    section = config_parser[name]
-    try:
-        add_watcher_from_section(section)
-    except Exception as e:
-        die(e)
-
-noticeme.run()  # event loop
+if __name__ == '__main__':
+    main()
