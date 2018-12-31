@@ -24,6 +24,21 @@ To see a full list of events:
   noticeme events
 ```
 
+To select which watchers we want to run we can give a list.\
+Say we had watchers named build:js, build:css, and test in a single config file.\
+In one terminal we could run:
+
+```
+  noticeme build:js build:css
+```
+
+And in another:
+
+```
+  noticeme test
+```
+
+
 ## Quick look at configuration
 
 see noticeme/examples/noticeme.cfg for details
