@@ -82,8 +82,11 @@ imports = None
 last_proc_at = datetime.min
 
 
-def read_config():
+def read_config(desired_watchers=None):
     global config_parser, should, imports
+    if desired_watchers is not None:
+        desired_watchers = list(desired_watchers)
+
     # read configuration
     config_path = 'noticeme.cfg'
     config_parser = ConfigParser()
@@ -108,6 +111,9 @@ def read_config():
     imports = config_parser['imports']
 
     for name, desc in imports.items():
+        if desired_watchers and name not in desired_watchers:
+            continue
+
         # import module
         try:
             mod = import_module(name)
@@ -116,6 +122,9 @@ def read_config():
         print("import", name, '-', desc)
 
     for name in config_parser.sections():
+        if desired_watchers and name not in desired_watchers:
+            continue
+
         if name == 'should' or name == 'imports':
             continue
         section = config_parser[name]
@@ -127,7 +136,7 @@ def read_config():
 
 async def create_shell_proc(name, command):
     global last_proc_at
-    if should["clear_screen"] == 'yes':
+    if should['clear_screen'] == 'yes':
         since_proc = (datetime.now() - last_proc_at)
         delay = timedelta(seconds=int(should['clear_after']))
         if since_proc > delay:
@@ -211,13 +220,17 @@ def add_watcher_from_section(section):
 
 
 def main():
-    if len(sys.argv) > 1:
+    desired_watchers = list()
+    if len(sys.argv) == 2:
         if sys.argv[1] == 'events':
             show_events()
             sys.exit(0)
 
+    if len(sys.argv) > 1:
+        desired_watchers = sys.argv[1:]
+
     # configure
-    read_config()
+    read_config(desired_watchers)
     # event loop
     noticeme.run()
 
