@@ -15,7 +15,7 @@ setup(name='noticeme',
       author='Bobby',
       author_email='bobbytrapz@protonmail.com',
       license='MIT',
-      version='2019.1',
+      version='2019.7',
       packages=find_packages(),
       entry_points={
           'console_scripts': [

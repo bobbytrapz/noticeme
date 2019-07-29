@@ -108,3 +108,7 @@ python3 inotify_build.py
 
 [watchdog](https://github.com/gorakhargosh/watchdog)
 [pyinotify](https://github.com/seb-m/pyinotify)
+
+## Version 2019.7
+
+- set a more informative window title
