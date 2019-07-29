@@ -51,6 +51,8 @@ defaults = {
     'imports': {},
 }
 
+def show_version():
+    print("noticeme 2019.7")
 
 def show_events():
     # gather all known events
@@ -220,10 +222,14 @@ def add_watcher_from_section(section):
 
 
 def main():
+    from pathlib import Path
     desired_watchers = list()
     if len(sys.argv) == 2:
         if sys.argv[1] == 'events':
             show_events()
+            sys.exit(0)
+        elif sys.argv[1] == 'version':
+            show_version()
             sys.exit(0)
 
     if len(sys.argv) > 1:
@@ -231,6 +237,10 @@ def main():
 
     # configure
     read_config(desired_watchers)
+    # set title
+    path = str(Path.cwd()).replace(str(Path.home()), '~')
+    sys.stdout.write("\x1b]2;noticeme {}\x07".format(path))
+    sys.stdout.flush()
     # event loop
     noticeme.run()
 
