@@ -23,14 +23,10 @@
 import asyncio
 import os
 import re
-import shlex
 import sys
-from configparser import (ConfigParser, DuplicateOptionError,
-                          DuplicateSectionError, NoOptionError, NoSectionError,
-                          ParsingError)
+from configparser import (ConfigParser, ParsingError)
 from datetime import datetime, timedelta
 from importlib import import_module
-from pathlib import PurePath
 
 from . import noticeme
 
@@ -51,8 +47,10 @@ defaults = {
     'imports': {},
 }
 
+
 def show_version():
-    print("noticeme 2019.7")
+    print("noticeme 2019.8")
+
 
 def show_events():
     # gather all known events
@@ -90,15 +88,17 @@ def read_config(desired_watchers=None):
         desired_watchers = list(desired_watchers)
 
     # read configuration
-    config_path = 'noticeme.cfg'
+    cfg_path_options = ['noticeme.cfg', '.noticeme']
     config_parser = ConfigParser()
     config_parser.read_dict(defaults)
-    try:
-        config_parser.read(config_path)
-    except ParsingError as e:
-        die(e)
-    except FileNotFoundError:
-        die('You need a noticeme.cfg first.')
+    for cfg_path in cfg_path_options:
+        try:
+            config_parser.read(cfg_path)
+        except ParsingError as e:
+            die(e)
+        except FileNotFoundError:
+            die('You need a config first. ({})'.format(
+                ','.join(cfg_path_options)))
 
     # parse configuration
     should = config_parser['should']
@@ -118,7 +118,7 @@ def read_config(desired_watchers=None):
 
         # import module
         try:
-            mod = import_module(name)
+            import_module(name)
         except ImportError:
             die("'import {}'".format(name))
         print("import", name, '-', desc)
@@ -177,7 +177,7 @@ def add_watcher_from_section(section):
     try:
         description = section['description']
         print(name, '-', description)
-    except:
+    except Exception:
         raise Exception(
             "'{}' must have a 'description'".format(name))
 
