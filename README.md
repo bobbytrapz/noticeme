@@ -112,3 +112,7 @@ python3 inotify_build.py
 ## Version 2019.7
 
 - set a more informative window title
+
+## Version 2019.8
+
+- add '.noticeme' as possible config file
