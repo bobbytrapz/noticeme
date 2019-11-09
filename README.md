@@ -14,7 +14,7 @@ If you just need a small file watcher you can try this out.
 
 ```
 pip install --user noticeme # install
-nano noticeme.cfg # use noticeme/examples/noticeme.cfg for an example
+noticeme init # writes an initial config to .noticeme
 noticeme # start watching
 ```
 
@@ -37,7 +37,6 @@ And in another:
 ```
   noticeme test
 ```
-
 
 ## Quick look at configuration
 
@@ -116,3 +115,7 @@ python3 inotify_build.py
 ## Version 2019.8
 
 - add '.noticeme' as possible config file
+
+## Version 2019.11
+
+- add 'init' command to write example config file
