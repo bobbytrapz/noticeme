@@ -49,7 +49,7 @@ defaults = {
 
 
 def show_version():
-    print("noticeme 2019.8")
+    print("noticeme 2019.11")
 
 
 def show_events():
@@ -221,6 +221,17 @@ def add_watcher_from_section(section):
         name, command, regex_patterns, glob_patterns))
 
 
+def write_initial_config():
+    from pathlib import Path
+    config_name = '.noticeme'
+    if Path(config_name).exists():
+        sys.stderr.write(f"[✓] {config_name} already exists\n")
+    else:
+        with Path(config_name).open('w') as out:
+            out.write(initial_config)
+            sys.stderr.write(f"[✓] Wrote {config_name}\n")
+
+
 def main():
     from pathlib import Path
     desired_watchers = list()
@@ -230,6 +241,9 @@ def main():
             sys.exit(0)
         elif sys.argv[1] == 'version':
             show_version()
+            sys.exit(0)
+        elif sys.argv[1] == 'init':
+            write_initial_config()
             sys.exit(0)
 
     if len(sys.argv) > 1:
@@ -247,3 +261,30 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+initial_config = """# .noticeme
+[should]
+  # if yes, we clear the screen on every execution
+  clear_screen = yes
+  # number of seconds to wait from last execution before clearing
+  clear_after = 10
+
+[imports]
+  # import watchers from .py file by name
+  # noticeme.watchers.example = An example of a watcher.
+
+[event_handler_name]
+  # quick description
+  description = We handle the written event
+  # space-separated list of paths to watch
+  paths = . **
+  # space-separated list of events to listen to. use 'noticeme events' for a list
+  events = written
+  # execute whenever the path matches this regex pattern (optional)
+  regex = ^docs
+  # execute whenver the path matches this glob pattern (optional)
+  glob = *.txt
+  # if no patterns are matched we run on every event
+  # execute this on the shell
+  shell = echo "event_handler_name: file was written"
+"""
